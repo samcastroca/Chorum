@@ -18,7 +18,7 @@ from app.core import (
     create_checkpointer,
 )
 from app.core.handlers import NodeHandler
-from app.core.schema import Node, ToolNode
+from app.core.schema import Node, NodeType, ToolNode
 
 
 @pytest.fixture
@@ -45,7 +45,7 @@ def _make_increment(node: Node, _definition: GraphDefinition) -> NodeHandler:
 
 
 @pytest.fixture
-def increment_handlers() -> dict[str, HandlerFactory]:
+def increment_handlers() -> dict[NodeType, HandlerFactory]:
     """Override que hace del nodo ``tool`` un incrementador determinista."""
     return {"tool": _make_increment}
 

@@ -9,9 +9,9 @@ from fastapi.testclient import TestClient
 from sqlalchemy.pool import StaticPool
 from sqlmodel import Session, SQLModel, create_engine
 
-import app.db.models  # noqa: F401 - registra las tablas en SQLModel.metadata
 from app.api.deps import get_session
-from app.main import app
+from app.db import models as _models  # noqa: F401 - registra las tablas en SQLModel.metadata
+from app.main import app as fastapi_app
 
 
 @pytest.fixture
@@ -34,10 +34,10 @@ def client() -> Iterator[TestClient]:
         with Session(engine) as session:
             yield session
 
-    app.dependency_overrides[get_session] = get_session_override
+    fastapi_app.dependency_overrides[get_session] = get_session_override
     try:
-        with TestClient(app) as test_client:
+        with TestClient(fastapi_app) as test_client:
             yield test_client
     finally:
-        app.dependency_overrides.clear()
+        fastapi_app.dependency_overrides.clear()
         engine.dispose()
