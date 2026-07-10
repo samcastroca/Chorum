@@ -1,0 +1,75 @@
+# Chorum — orquestación de desarrollo.
+#   docker compose up                          -> db + backend + frontend
+#   docker compose --profile local-models up   -> además levanta Ollama (modelos locales)
+#
+# Fase 0: servicios mínimos ejecutables (bootstrap, sin lógica de negocio).
+# Requiere un archivo `.env` en la raíz (copiá `.env.example`).
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-chorum}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-chorum}
+      POSTGRES_DB: ${POSTGRES_DB:-chorum}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-chorum} -d ${POSTGRES_DB:-chorum}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    env_file:
+      # Opcional: si no existe `.env` (clon recién hecho), se usan los defaults de abajo.
+      - path: .env
+        required: false
+    environment:
+      # Dentro de la red de compose el host de la DB es `db`, no localhost.
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://chorum:chorum@db:5432/chorum}
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    volumes:
+      # Hot-reload en desarrollo. El .venv del contenedor no se pisa con el del host.
+      - ./backend:/app
+      - /app/.venv
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+    restart: unless-stopped
+    environment:
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8000}
+    command: npm run dev -- --host
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+
+  ollama:
+    image: ollama/ollama:latest
+    profiles:
+      - local-models
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+
+volumes:
+  pgdata:
+  ollama:

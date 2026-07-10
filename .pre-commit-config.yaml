@@ -1,0 +1,45 @@
+# Pre-commit hooks para Chorum.
+#   pip install pre-commit   (o: uv tool install pre-commit)
+#   pre-commit install
+#   pre-commit run --all-files
+#
+# Backend -> ruff (lint + format). Frontend -> prettier. Más hooks de higiene general.
+
+default_language_version:
+  python: python3.12
+
+repos:
+  # ---- Backend: ruff lint + format ----
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.6
+    hooks:
+      - id: ruff
+        name: ruff (backend lint)
+        args: [--fix]
+        files: ^backend/
+      - id: ruff-format
+        name: ruff format (backend)
+        files: ^backend/
+
+  # ---- Frontend: prettier ----
+  # Usa un entorno node aislado gestionado por pre-commit (no depende de node global).
+  - repo: local
+    hooks:
+      - id: prettier
+        name: prettier (frontend)
+        entry: prettier --write --ignore-unknown
+        language: node
+        additional_dependencies: ["prettier@3.4.2"]
+        files: ^frontend/.*\.(js|jsx|ts|tsx|css|html|json|md|ya?ml)$
+
+  # ---- Higiene general ----
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: ^.*\.md$
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+        args: [--maxkb=1024]
+      - id: check-merge-conflict
