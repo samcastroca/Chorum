@@ -1,0 +1,44 @@
+# Keep build contexts small and avoid leaking local state into images.
+.git
+.github
+.gitignore
+.dockerignore
+.editorconfig
+.pre-commit-config.yaml
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Docs / examples / scripts are not needed inside runtime images
+docs
+examples
+scripts
+*.md
+!README.md
+
+# Python
+**/__pycache__/
+**/*.py[cod]
+**/.venv/
+**/.mypy_cache/
+**/.ruff_cache/
+**/.pytest_cache/
+**/.coverage
+**/htmlcov/
+
+# Node
+**/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
