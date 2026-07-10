@@ -5,7 +5,8 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Any
 
-from app.core import GraphDefinition, HandlerFactory, NodeType, run_graph
+from app.core import GraphDefinition, HandlerFactory, run_graph
+from app.core.schema import NodeType
 
 
 async def test_cycle_terminates_on_condition(

@@ -35,6 +35,11 @@ class Settings(BaseSettings):
     # SQLite por defecto en desarrollo local; docker compose inyecta la URL de Postgres.
     database_url: str = "sqlite:///./chorum.db"
 
+    # Ruta del SQLite del checkpointer de LangGraph. ``None`` = en memoria (default, ideal para
+    # tests y dev simple); apuntarlo a un archivo persiste los checkpoints entre reinicios, lo
+    # que habilita el time-travel debugging sobre ejecuciones pasadas (Fase 4).
+    checkpointer_db_path: str | None = None
+
     @property
     def cors_origins_list(self) -> list[str]:
         """`cors_origins` normalizada a lista, descartando entradas vacías."""

@@ -14,12 +14,11 @@ import pytest
 from app.core import (
     GraphDefinition,
     HandlerFactory,
-    NodeType,
     close_checkpointer,
     create_checkpointer,
 )
 from app.core.handlers import NodeHandler
-from app.core.schema import Node, ToolNode
+from app.core.schema import Node, NodeType, ToolNode
 
 
 @pytest.fixture
