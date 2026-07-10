@@ -14,6 +14,7 @@ import pytest
 from app.core import (
     GraphDefinition,
     HandlerFactory,
+    NodeType,
     close_checkpointer,
     create_checkpointer,
 )
@@ -45,7 +46,7 @@ def _make_increment(node: Node, _definition: GraphDefinition) -> NodeHandler:
 
 
 @pytest.fixture
-def increment_handlers() -> dict[str, HandlerFactory]:
+def increment_handlers() -> dict[NodeType, HandlerFactory]:
     """Override que hace del nodo ``tool`` un incrementador determinista."""
     return {"tool": _make_increment}
 
