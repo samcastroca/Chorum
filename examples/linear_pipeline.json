@@ -1,0 +1,44 @@
+{
+  "name": "pipeline-lineal-demo",
+  "version": 1,
+  "state_schema": [
+    {
+      "name": "messages",
+      "type": "list",
+      "reducer": "append",
+      "description": "Traza acumulada de la salida de cada agente."
+    }
+  ],
+  "nodes": [
+    { "type": "start", "id": "inicio" },
+    {
+      "type": "agent",
+      "id": "investigador",
+      "label": "Investigador",
+      "system_prompt": "Investiga el tema y reúne datos relevantes.",
+      "output_key": "messages"
+    },
+    {
+      "type": "agent",
+      "id": "redactor",
+      "label": "Redactor",
+      "system_prompt": "Redacta un borrador a partir de la investigación.",
+      "output_key": "messages"
+    },
+    {
+      "type": "agent",
+      "id": "revisor",
+      "label": "Revisor",
+      "system_prompt": "Revisa y corrige el borrador.",
+      "output_key": "messages"
+    },
+    { "type": "end", "id": "fin" }
+  ],
+  "edges": [
+    { "source": "inicio", "target": "investigador" },
+    { "source": "investigador", "target": "redactor" },
+    { "source": "redactor", "target": "revisor" },
+    { "source": "revisor", "target": "fin" }
+  ],
+  "max_iterations": 25
+}

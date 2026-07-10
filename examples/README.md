@@ -2,7 +2,12 @@
 
 Grafos de ejemplo en JSON, listos para importar en el builder.
 
-> **Fase 0**: todavía no hay ejemplos. Se crean en la **Fase 9**, incluyendo al menos uno
+- [`linear_pipeline.json`](./linear_pipeline.json) — **(Fase 1)** pipeline lineal de 3
+  agentes. Demo del motor de orquestación: se ejecuta con
+  [`scripts/run_example.py`](../scripts/run_example.py) sin necesidad de API/UI ni modelos
+  (los nodos usan placeholders deterministas por ahora).
+
+> El set completo de ejemplos curados se arma en la **Fase 9**, incluyendo al menos uno
 > configurado en modo air-gap (solo modelos locales) como demo funcional de esa feature.
 
 Ejemplos previstos:
