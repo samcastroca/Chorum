@@ -9,6 +9,10 @@ dependencies = [
     "fastapi>=0.115.0",
     "uvicorn[standard]>=0.34.0",
     "pydantic-settings>=2.7.0",
+    # Motor de orquestación (Fase 1). El checkpointer sqlite habilita el time-travel (Fase 4).
+    "langgraph>=1.2.0",
+    "langgraph-checkpoint-sqlite>=3.1.0",
+    "aiosqlite>=0.20.0",
 ]
 
 # Proyecto de aplicación (no librería): sin [build-system], uv gestiona el entorno
@@ -20,6 +24,7 @@ dev = [
     "mypy>=1.14.0",
     "pytest>=8.3.0",
     "pytest-asyncio>=0.25.0",
+    "pytest-cov>=6.0.0",
     "httpx>=0.28.0",
 ]
 
@@ -55,6 +60,11 @@ warn_unused_ignores = true
 warn_redundant_casts = true
 disallow_untyped_defs = true
 exclude = ['\.venv', 'build', 'dist']
+
+# langgraph-checkpoint (namespace langgraph.checkpoint.*) no distribuye py.typed todavía.
+[[tool.mypy.overrides]]
+module = ["langgraph.checkpoint.*"]
+ignore_missing_imports = true
 
 # ---- Pytest ----
 [tool.pytest.ini_options]
