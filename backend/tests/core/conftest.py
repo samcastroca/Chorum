@@ -14,6 +14,7 @@ import pytest
 from app.core import (
     GraphDefinition,
     HandlerFactory,
+    NodeType,
     close_checkpointer,
     create_checkpointer,
 )
